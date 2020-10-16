@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
-    <height>564</height>
+    <width>1080</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,13 +24,13 @@
     <item>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
-       <widget class="QGraphicsView" name="graphicsView_2"/>
+       <widget class="ASCGraphicsView" name="sGraphicsView"/>
       </item>
       <item row="0" column="0">
-       <widget class="QGraphicsView" name="graphicsView"/>
+       <widget class="ASCGraphicsView" name="aGraphicsView"/>
       </item>
       <item row="1" column="0">
-       <widget class="QGraphicsView" name="graphicsView_3"/>
+       <widget class="ASCGraphicsView" name="cGraphicsView"/>
       </item>
       <item row="1" column="1">
        <widget class="QOpenGLWidget" name="openGLWidget"/>
@@ -50,7 +50,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>795</width>
+     <width>1080</width>
      <height>22</height>
     </rect>
    </property>
@@ -82,6 +82,18 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ASCGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>controller.graphics_view_controller</header>
+   <slots>
+    <signal>view_scale_signal(float,float)</signal>
+    <signal>view_set_cursor_signal(int,int,int)</signal>
+    <signal>view_move_cursor_signal(int,int,int)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -116,8 +128,107 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>aGraphicsView</sender>
+   <signal>view_scale_signal(float,float)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>scale_all_scenes(float,float)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cGraphicsView</sender>
+   <signal>view_scale_signal(float,float)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>scale_all_scenes(float,float)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>526</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sGraphicsView</sender>
+   <signal>view_scale_signal(float,float)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>scale_all_scenes(float,float)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>694</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>aGraphicsView</sender>
+   <signal>view_move_cursor_signal(int,int,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>move_cursor(int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cGraphicsView</sender>
+   <signal>view_move_cursor_signal(int,int,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>move_cursor(int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>526</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sGraphicsView</sender>
+   <signal>view_move_cursor_signal(int,int,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>move_cursor(int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>694</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>menu_open_triggered()</slot>
+  <slot>scale_all_scenes(float,float)</slot>
+  <slot>move_cursor(int,int,int)</slot>
+  <slot>set_cursor(int,int,int)</slot>
  </slots>
 </ui>
