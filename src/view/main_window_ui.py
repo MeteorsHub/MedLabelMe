@@ -26,12 +26,19 @@ class Ui_MainWindow(object):
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
         self.sGraphicsView = ASCGraphicsView(self.centralwidget)
+        self.sGraphicsView.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.sGraphicsView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.sGraphicsView.setObjectName("sGraphicsView")
         self.gridLayout.addWidget(self.sGraphicsView, 0, 1, 1, 1)
         self.aGraphicsView = ASCGraphicsView(self.centralwidget)
+        self.aGraphicsView.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.aGraphicsView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.aGraphicsView.setDragMode(QtWidgets.QGraphicsView.NoDrag)
         self.aGraphicsView.setObjectName("aGraphicsView")
         self.gridLayout.addWidget(self.aGraphicsView, 0, 0, 1, 1)
         self.cGraphicsView = ASCGraphicsView(self.centralwidget)
+        self.cGraphicsView.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.cGraphicsView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.cGraphicsView.setObjectName("cGraphicsView")
         self.gridLayout.addWidget(self.cGraphicsView, 1, 0, 1, 1)
         self.openGLWidget = QtWidgets.QOpenGLWidget(self.centralwidget)
@@ -79,6 +86,9 @@ class Ui_MainWindow(object):
         self.aGraphicsView.view_move_cursor_signal['int', 'int', 'int'].connect(MainWindow.move_cursor)
         self.cGraphicsView.view_move_cursor_signal['int', 'int', 'int'].connect(MainWindow.move_cursor)
         self.sGraphicsView.view_move_cursor_signal['int', 'int', 'int'].connect(MainWindow.move_cursor)
+        MainWindow.set_cross_bar_signal['int', 'int', 'int'].connect(self.aGraphicsView.set_cross_bar)
+        MainWindow.set_cross_bar_signal['int', 'int', 'int'].connect(self.cGraphicsView.set_cross_bar)
+        MainWindow.set_cross_bar_signal['int', 'int', 'int'].connect(self.sGraphicsView.set_cross_bar)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -88,6 +98,4 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionClose.setText(_translate("MainWindow", "Close"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
-
-
 from controller.graphics_view_controller import ASCGraphicsView

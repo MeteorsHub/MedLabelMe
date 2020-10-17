@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage, QTransform
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QPushButton
 
@@ -7,6 +7,8 @@ from view.main_window_ui import Ui_MainWindow
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+    set_cross_bar_signal = pyqtSignal('int', 'int', 'int')
+
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.parent = parent
@@ -20,7 +22,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def update_scenes(self, scenes='asc'):
         if 'a' in scenes:
             self.aGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map('a', self.cursor[2], 'raw', self.window_lower, self.window_upper),
+                self.model.get_2D_map_in_window('a', self.cursor[2], 'raw', self.window_lower, self.window_upper),
                 self.model.get_size()[1],
                 self.model.get_size()[0],
                 self.model.get_size()[1] * 1,  # bytesperline = width*channel
@@ -29,7 +31,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if 's' in scenes:
             self.sGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map('s', self.cursor[0], 'raw', self.window_lower, self.window_upper),
+                self.model.get_2D_map_in_window('s', self.cursor[0], 'raw', self.window_lower, self.window_upper),
                 self.model.get_size()[2],
                 self.model.get_size()[1],
                 self.model.get_size()[2] * 1,  # bytesperline = width*channel
@@ -38,7 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if 'c' in scenes:
             self.cGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map('c', self.cursor[1], 'raw', self.window_lower, self.window_upper),
+                self.model.get_2D_map_in_window('c', self.cursor[1], 'raw', self.window_lower, self.window_upper),
                 self.model.get_size()[2],
                 self.model.get_size()[0],
                 self.model.get_size()[2] * 1,  # bytesperline = width*channel
@@ -83,6 +85,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_cursor[1] != self._cursor[1]:
             scenes += 'c'
         self._cursor = new_cursor
+        self.set_cross_bar_signal.emit(new_cursor[0], new_cursor[1], new_cursor[2])
         self.update_scenes(scenes)
 
     @pyqtSlot('float', 'float')

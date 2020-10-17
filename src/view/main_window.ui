@@ -24,13 +24,37 @@
     <item>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
-       <widget class="ASCGraphicsView" name="sGraphicsView"/>
+       <widget class="ASCGraphicsView" name="sGraphicsView">
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
-       <widget class="ASCGraphicsView" name="aGraphicsView"/>
+       <widget class="ASCGraphicsView" name="aGraphicsView">
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="dragMode">
+         <enum>QGraphicsView::NoDrag</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
-       <widget class="ASCGraphicsView" name="cGraphicsView"/>
+       <widget class="ASCGraphicsView" name="cGraphicsView">
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="1">
        <widget class="QOpenGLWidget" name="openGLWidget"/>
@@ -91,6 +115,7 @@
     <signal>view_scale_signal(float,float)</signal>
     <signal>view_set_cursor_signal(int,int,int)</signal>
     <signal>view_move_cursor_signal(int,int,int)</signal>
+    <slot>set_cross_bar(int,int,int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -224,8 +249,57 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>set_cross_bar_signal(int,int,int)</signal>
+   <receiver>aGraphicsView</receiver>
+   <slot>set_cross_bar(int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>set_cross_bar_signal(int,int,int)</signal>
+   <receiver>cGraphicsView</receiver>
+   <slot>set_cross_bar(int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>526</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>set_cross_bar_signal(int,int,int)</signal>
+   <receiver>sGraphicsView</receiver>
+   <slot>set_cross_bar(int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>539</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>694</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
+  <signal>set_cross_bar_signal(int,int,int)</signal>
   <slot>menu_open_triggered()</slot>
   <slot>scale_all_scenes(float,float)</slot>
   <slot>move_cursor(int,int,int)</slot>

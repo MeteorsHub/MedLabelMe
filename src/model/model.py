@@ -14,6 +14,8 @@ class Model:
         self.anno_img_filepath = None
         self.last_wd = os.getcwd()
 
+        self.raw_img_stats = [None for _ in range(2)]  # [min_val, max_val]
+
     def read_img(self, filepath, img_type):
         assert img_type in ['raw', 'anno']
         if not os.path.exists(filepath):
@@ -31,8 +33,21 @@ class Model:
                 raise IllegalSizeError(self.anno_img.GetSize(), self.raw_img.GetSize())
             self.anno_img = None
             self.anno_img_filepath = None
+        self.compute_img_stats(img_type)
 
-    def get_2D_map(self, view, index, img_type='raw', low_bound=None, up_bound=None):
+    def compute_img_stats(self, img_type):
+        assert img_type in ['raw', 'anno']
+        if img_type == 'raw':
+            if self.raw_img is None:
+                self.raw_img_stats = [None for _ in self.raw_img_stats]
+            else:
+                img = sitk.GetArrayFromImage(self.raw_img)
+                self.raw_img_stats[0] = img.min()
+                self.raw_img_stats[1] = img.max()
+        elif img_type == 'anno':
+            pass
+
+    def get_2D_map_in_window(self, view, index, img_type='raw', low_bound=None, up_bound=None):
         assert view in ['a', 's', 'c']
         assert img_type in ['raw', 'anno']
         if index < 0:
@@ -44,41 +59,38 @@ class Model:
 
         if itk_img is None:
             return None
-        value_min, value_max = self.get_voxel_value_bound()
-        if low_bound is None or low_bound < value_min:
-            low_bound = value_min
-        if up_bound is None or up_bound > value_max:
-            up_bound = value_max
-        img = self.get_raw_img_in_window(low_bound, up_bound, normalization=True)  # x, y, z
+
+        img = sitk.GetArrayFromImage(itk_img)
+        img = np.transpose(img, (2, 1, 0))  # d, h, w to w, h, d
+        # img = self.get_raw_img_in_window(low_bound, up_bound, normalization=True)  # x, y, z
 
         if view == 'a':
             if index >= itk_img.GetSize()[2]:
                 index = itk_img.GetSize()[2] - 1
-            img_slice = img[:, :, index]
-
-            return img_slice.copy()  # x, y
+            img_slice = img[:, :, index]  # x, y
         if view == 's':
             if index >= itk_img.GetSize()[0]:
                 index = itk_img.GetSize()[0] - 1
-            img_slice = img[index, :, :]
-            # import cv2
-            # cv2.imshow('demo', img_slice)
-            # cv2.waitKey(0)
-            img_slice = np.array(img_slice, np.uint8)
-            return img_slice.copy()  # y, z
+            img_slice = img[index, :, :]  # y, z
         if view == 'c':
             if index >= itk_img.GetSize()[1]:
                 index = itk_img.GetSize()[1] - 1
-            img_slice = img[:, index, :]
-            return img_slice.copy()  # x, z
+            img_slice = img[:, index, :]  # x, z
 
-    # @lru_cache(maxsize=2)
-    def get_raw_img_in_window(self, low_bound, up_bound, normalization=False):
-        if self.raw_img is None:
-            return None
-        img = sitk.GetArrayFromImage(self.raw_img)
-        img = np.transpose(img, (2, 1, 0))  # d, h, w to w, h, d
-        assert low_bound >= img.min() and up_bound <= img.max()
+        value_min, value_max = self.get_voxel_value_bound()
+        if img_type == 'anno':
+            return img_slice.copy()
+        if img_type == 'raw':
+            if low_bound is None or low_bound < value_min:
+                low_bound = value_min
+            if up_bound is None or up_bound > value_max:
+                up_bound = value_max
+            img_slice = self.clip_img_in_window(img_slice, low_bound, up_bound, normalization=True)
+            return img_slice.copy()
+
+    def clip_img_in_window(self, img, low_bound, up_bound, normalization=False):
+        value_min, value_max = self.get_voxel_value_bound()
+        assert low_bound >= value_min and up_bound <= value_max
         img = np.clip(img, low_bound, up_bound)
         if normalization:
             img = (255 * (img.astype(np.float32) - low_bound) / (up_bound - low_bound)).astype(np.uint8)
@@ -90,7 +102,6 @@ class Model:
         return list(self.raw_img.GetSize())
 
     def get_voxel_value_bound(self):
-        if self.raw_img is None:
+        if self.raw_img_stats is None:
             return None
-        img = sitk.GetArrayFromImage(self.raw_img)
-        return img.min(), img.max()
+        return self.raw_img_stats[0:2]
