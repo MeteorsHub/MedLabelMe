@@ -1,20 +1,35 @@
 import os
 
 import SimpleITK as sitk
+import cc3d
 import numpy as np
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 
-from utils.exception_utils import IllegalSizeError
+from utils.exception_utils import IllegalSizeError, ImageTypeError
 
 
 class Model:
     def __init__(self):
-        self.raw_img = None
-        self.anno_img = None
-        self.raw_img_filepath = None
-        self.anno_img_filepath = None
+        self._raw_img = None
+        self._anno_img = None
+        self._anno_img_edit = None  # d, h, w
+        self._raw_img_filepath = None
+        self._anno_img_filepath = None
         self.last_wd = os.getcwd()
 
-        self.raw_img_stats = [None for _ in range(2)]  # [min_val, max_val]
+        self.label_colors = [QColor(Qt.red), QColor(Qt.green), QColor(Qt.yellow), QColor(Qt.magenta), QColor(Qt.blue)]
+
+        self._raw_img_stats = {
+            'min_val': None,
+            'max_val': None
+        }
+        self._anno_img_stats = {
+            'num_positive_labels': None,  # label 0 is background
+            'target_labels': None,  # [n_targets]. order of target_label_map 1~n_targets.
+            'target_centers': None,  # [n_targets]. order of target_label_map 1~n_targets.
+            'target_label_map': None  # [d, h, w]
+        }
 
     def read_img(self, filepath, img_type):
         assert img_type in ['raw', 'anno']
@@ -22,47 +37,90 @@ class Model:
             raise FileNotFoundError('%s do not exist' % filepath)
         self.last_wd = os.path.dirname(filepath)
         if img_type == 'raw':
-            self.raw_img = sitk.ReadImage(filepath)
-            self.raw_img_filepath = filepath
-            self.anno_img = None
-            self.anno_img_filepath = None
+            self._raw_img = sitk.ReadImage(filepath)
+            self._raw_img_filepath = filepath
+            self.compute_img_stats('raw')
+            self._anno_img = sitk.Image(self.get_size(), sitk.sitkInt16)
+            self._anno_img.CopyInformation(self._raw_img)
+            self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img)
+            self._anno_img_filepath = '[newly created]'
         elif img_type == 'anno':
-            self.anno_img = sitk.ReadImage(filepath)
-            self.anno_img_filepath = filepath
-            if self.anno_img.GetSize() != self.raw_img.GetSize():
-                raise IllegalSizeError(self.anno_img.GetSize(), self.raw_img.GetSize())
-            self.anno_img = None
-            self.anno_img_filepath = None
-        self.compute_img_stats(img_type)
+            anno_img = sitk.ReadImage(filepath)
+            if sitk.GetArrayViewFromImage(anno_img).min() < 0 or sitk.GetArrayViewFromImage(anno_img).max() > 50:
+                raise ImageTypeError(img_type='raw image', preferred_img_type='anno image')
+            if anno_img.GetSize() != self._raw_img.GetSize():
+                raise IllegalSizeError(anno_img.GetSize(), self._raw_img.GetSize())
+            else:
+                self._anno_img = anno_img
+                self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img).astype(np.int16)
+                self._anno_img_filepath = filepath
+        self.compute_img_stats('anno')
 
     def compute_img_stats(self, img_type):
         assert img_type in ['raw', 'anno']
         if img_type == 'raw':
-            if self.raw_img is None:
-                self.raw_img_stats = [None for _ in self.raw_img_stats]
+            if self._raw_img is None:
+                for k in self._raw_img_stats.keys():
+                    self._raw_img_stats[k] = None
             else:
-                img = sitk.GetArrayFromImage(self.raw_img)
-                self.raw_img_stats[0] = img.min()
-                self.raw_img_stats[1] = img.max()
-        elif img_type == 'anno':
-            pass
+                img = sitk.GetArrayViewFromImage(self._raw_img)
+                self._raw_img_stats['min_val'] = img.min()
+                self._raw_img_stats['max_val'] = img.max()
+        if img_type == 'anno':
+            if self._anno_img is None:
+                for k in self._anno_img_stats.keys():
+                    self._anno_img_stats[k] = None
+            else:
+                self._anno_img_stats['num_positive_labels'] = self._anno_img_edit.max()
+                all_targets_map = cc3d.connected_components(self._anno_img_edit, connectivity=26, out_dtype=np.uint16)
+                num_all_targets = all_targets_map.max()
 
-    def get_2D_map_in_window(self, view, index, img_type='raw', low_bound=None, up_bound=None):
+                target_centers = []
+                target_labels = []
+                for i_target in range(1, num_all_targets + 1):
+                    binary_map = all_targets_map == i_target
+                    target_centers.append(Model.get_target_center(binary_map))
+                    target_labels.append(
+                        int(self._anno_img_edit[np.unravel_index(binary_map.argmax(), binary_map.shape)]))
+                self._anno_img_stats['target_labels'] = target_labels
+                self._anno_img_stats['target_centers'] = target_centers
+                self._anno_img_stats['target_label_map'] = all_targets_map
+
+    @staticmethod
+    def get_target_center(target_binary_map):
+        assert target_binary_map.ndim == 3
+        target_binary_map = target_binary_map.astype(np.int16)
+        center = [-1, -1, -1]
+        if target_binary_map.max() < 1:
+            return center
+        yz = np.sum(target_binary_map, 0)
+        xz = np.sum(target_binary_map, 1)
+        x = np.sum(xz, 1)
+        z = np.sum(xz, 0)
+        y = np.sum(yz, 1)
+        return [np.argmax(x), np.argmax(y), np.argmax(z)]
+
+    def get_2D_map_in_window(self, view, index, img_type='raw', low_bound=None, up_bound=None, colored_anno=True,
+                             alpha=None):
+        """colored_anno=True transit anno to RGB map, else grayscale.
+        alpha only applied to foreground label(!=0) when colored_anno=True. """
         assert view in ['a', 's', 'c']
         assert img_type in ['raw', 'anno']
         if index < 0:
             index = 0
         if img_type == 'raw':
-            itk_img = self.raw_img
+            itk_img = self._raw_img
         if img_type == 'anno':
-            itk_img = self.anno_img
+            itk_img = self._anno_img
 
         if itk_img is None:
             return None
 
-        img = sitk.GetArrayFromImage(itk_img)
+        if img_type == 'raw':
+            img = sitk.GetArrayViewFromImage(itk_img)
+        if img_type == 'anno':
+            img = self._anno_img_edit
         img = np.transpose(img, (2, 1, 0))  # d, h, w to w, h, d
-        # img = self.get_raw_img_in_window(low_bound, up_bound, normalization=True)  # x, y, z
 
         if view == 'a':
             if index >= itk_img.GetSize()[2]:
@@ -79,6 +137,8 @@ class Model:
 
         value_min, value_max = self.get_voxel_value_bound()
         if img_type == 'anno':
+            if colored_anno:
+                img_slice = self.color_anno_img(img_slice, alpha)
             return img_slice.copy()
         if img_type == 'raw':
             if low_bound is None or low_bound < value_min:
@@ -88,6 +148,20 @@ class Model:
             img_slice = self.clip_img_in_window(img_slice, low_bound, up_bound, normalization=True)
             return img_slice.copy()
 
+    def get_voxel_value_at_point(self, point, img_type):
+        assert img_type in ['raw', 'anno']
+        x, y, z = point
+        if img_type == 'raw':
+            if self._raw_img is None:
+                return 0
+            else:
+                return sitk.GetArrayViewFromImage(self._raw_img)[z, y, x]
+        if img_type == 'anno':
+            if self._anno_img is None:
+                return 0
+            else:
+                return self._anno_img_edit[z, y, x]
+
     def clip_img_in_window(self, img, low_bound, up_bound, normalization=False):
         value_min, value_max = self.get_voxel_value_bound()
         assert low_bound >= value_min and up_bound <= value_max
@@ -96,12 +170,64 @@ class Model:
             img = (255 * (img.astype(np.float32) - low_bound) / (up_bound - low_bound)).astype(np.uint8)
         return img
 
+    def color_anno_img(self, anno_img, alpha):
+        anno_img = anno_img.copy().astype(np.int16)
+        num_colors = max(min(len(self.label_colors), self._anno_img_stats['num_positive_labels']), 1)
+        anno_img = np.where(anno_img == 0, anno_img, ((anno_img - 1) % num_colors + 1))
+
+        # color_img = (255*label2rgb(anno_img, colors=self.label_colors, bg_label=0)).astype(np.uint8)  # too slow
+        anno_img_expanded = np.expand_dims(anno_img, -1)
+        tiled_anno_img = np.tile(anno_img_expanded, (1, 1, 3))
+        bg_img = np.zeros_like(tiled_anno_img, np.uint8)
+        color_img = bg_img
+        for i in range(num_colors):
+            fg_img = np.ones_like(tiled_anno_img, np.uint8)
+            fg_img[:, :, 0] = self.label_colors[i].red()
+            fg_img[:, :, 1] = self.label_colors[i].green()
+            fg_img[:, :, 2] = self.label_colors[i].blue()
+            color_img = np.where(anno_img_expanded == (i + 1), fg_img, color_img)
+
+        if alpha is None:
+            alpha_channel = 255 * np.ones_like(anno_img_expanded, np.uint8)
+        else:
+            alpha_channel = np.where(anno_img_expanded == 0,
+                                     np.zeros_like(anno_img_expanded, np.uint8),
+                                     round(alpha * 255) * np.ones_like(anno_img_expanded, np.uint8))
+        color_img = np.concatenate([color_img, alpha_channel], -1)
+        return color_img
+
     def get_size(self):
-        if self.raw_img is None:
+        """return x, y, z"""
+        if self._raw_img is None:
             return None
-        return list(self.raw_img.GetSize())
+        return list(self._raw_img.GetSize())
 
     def get_voxel_value_bound(self):
-        if self.raw_img_stats is None:
-            return None
-        return self.raw_img_stats[0:2]
+        return self._raw_img_stats['min_val'], self._raw_img_stats['max_val']
+
+    def get_img_filepath(self, img_type):
+        assert img_type in ['raw', 'anno']
+        if img_type == 'raw':
+            return '' if self._raw_img_filepath is None else self._raw_img_filepath
+        if img_type == 'anno':
+            return '' if self._anno_img_filepath is None else self._anno_img_filepath
+
+    def is_valid(self):
+        if self._raw_img is None:
+            return False
+        return True
+
+    def get_anno_num_labels(self):
+        if self._anno_img_stats['num_positive_labels'] is None:
+            return 0
+        return self._anno_img_stats['num_positive_labels']
+
+    def get_anno_target_centers_for_label(self, label=1):
+        if self._anno_img_stats['target_labels'] is None:
+            return []
+        target_centers = []
+        all_target_centers = self._anno_img_stats['target_centers']
+        for i, target_label in enumerate(self._anno_img_stats['target_labels']):
+            if target_label == label:
+                target_centers.append(all_target_centers[i])
+        return target_centers

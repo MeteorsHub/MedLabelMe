@@ -11,3 +11,19 @@ class IllegalSizeError(Exception):
         if self.reference_size is not None:
             msg += '\nreference size: %s' % self.reference_size
         return msg
+
+
+class ImageTypeError(Exception):
+    "check the image type"
+
+    def __init__(self, img_type=None, preferred_img_type=None):
+        self.img_type = img_type
+        self.preferred_img_type = preferred_img_type
+
+    def __str__(self):
+        msg = 'Wrong image type!'
+        if self.img_type is not None:
+            msg += '\nimage type may be: %s' % self.img_type
+        if self.preferred_img_type is not None:
+            msg += '\npreferred image type: %s' % self.preferred_img_type
+        return msg

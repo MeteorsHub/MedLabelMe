@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
+    <width>1081</width>
     <height>720</height>
    </rect>
   </property>
@@ -14,13 +14,304 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,20,1,5">
-    <property name="spacing">
-     <number>1</number>
-    </property>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout"/>
-    </item>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,20,5">
+          <property name="spacing">
+              <number>1</number>
+          </property>
+          <item>
+              <layout class="QVBoxLayout" name="verticalLayout">
+                  <property name="rightMargin">
+                      <number>5</number>
+                  </property>
+                  <item>
+                      <widget class="QLabel" name="label_6">
+                          <property name="font">
+                              <font>
+                                  <pointsize>12</pointsize>
+                              </font>
+                          </property>
+                          <property name="text">
+                              <string>Information:</string>
+                          </property>
+                      </widget>
+                  </item>
+                  <item>
+                      <widget class="QGroupBox" name="groupBox">
+                          <property name="font">
+                              <font>
+                                  <pointsize>9</pointsize>
+                              </font>
+                          </property>
+                          <property name="title">
+                              <string/>
+                          </property>
+                          <layout class="QVBoxLayout" name="verticalLayout_4">
+                              <item>
+                                  <widget class="QLabel" name="label_3">
+                                      <property name="text">
+                                          <string>Image:</string>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QLineEdit" name="lineEditImageName">
+                                      <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                                              <horstretch>0</horstretch>
+                                              <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                      </property>
+                                      <property name="text">
+                                          <string>Null</string>
+                                      </property>
+                                      <property name="readOnly">
+                                          <bool>true</bool>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QLabel" name="label_5">
+                                      <property name="text">
+                                          <string>Annotation:</string>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QLineEdit" name="lineEditAnnotationName">
+                                      <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                                              <horstretch>0</horstretch>
+                                              <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                      </property>
+                                      <property name="text">
+                                          <string>Null</string>
+                                      </property>
+                                      <property name="readOnly">
+                                          <bool>true</bool>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QLabel" name="label_7">
+                                      <property name="text">
+                                          <string>Image Size (x,y,z):</string>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QLineEdit" name="lineEditImageSize">
+                                      <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                                              <horstretch>0</horstretch>
+                                              <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                      </property>
+                                      <property name="text">
+                                          <string>(0, 0, 0)</string>
+                                      </property>
+                                      <property name="readOnly">
+                                          <bool>true</bool>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QLabel" name="label_4">
+                                      <property name="text">
+                                          <string>Value Under Cursor:</string>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <widget class="QListWidget" name="valueUnderCursorList">
+                                      <property name="selectionMode">
+                                          <enum>QAbstractItemView::NoSelection</enum>
+                                      </property>
+                                  </widget>
+                              </item>
+                          </layout>
+                      </widget>
+                  </item>
+                  <item>
+                      <spacer name="verticalSpacer">
+                          <property name="orientation">
+                              <enum>Qt::Vertical</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                              <size>
+                                  <width>20</width>
+                                  <height>40</height>
+                              </size>
+                          </property>
+                      </spacer>
+                  </item>
+                  <item>
+                      <widget class="QLabel" name="label_2">
+                          <property name="font">
+                              <font>
+                                  <pointsize>12</pointsize>
+                              </font>
+                          </property>
+                          <property name="text">
+                              <string>Control:</string>
+                          </property>
+                      </widget>
+                  </item>
+                  <item>
+                      <widget class="QGroupBox" name="groupBox_2">
+                          <property name="title">
+                              <string/>
+                          </property>
+                          <layout class="QVBoxLayout" name="verticalLayout_5">
+                              <item>
+                                  <widget class="QLabel" name="label">
+                                      <property name="text">
+                                          <string>Cursor Position (x,y,z):</string>
+                                      </property>
+                                  </widget>
+                              </item>
+                              <item>
+                                  <layout class="QHBoxLayout" name="horizontalLayout_3">
+                                      <item>
+                                          <widget class="QSpinBox" name="xSpinBox">
+                                              <property name="prefix">
+                                                  <string/>
+                                              </property>
+                                              <property name="minimum">
+                                                  <number>1</number>
+                                              </property>
+                                          </widget>
+                                      </item>
+                                      <item>
+                                          <widget class="QSpinBox" name="ySpinBox">
+                                              <property name="minimum">
+                                                  <number>1</number>
+                                              </property>
+                                          </widget>
+                                      </item>
+                                      <item>
+                                          <widget class="QSpinBox" name="zSpinBox">
+                                              <property name="minimum">
+                                                  <number>1</number>
+                                              </property>
+                                          </widget>
+                                      </item>
+                                  </layout>
+                              </item>
+                              <item>
+                                  <widget class="QGroupBox" name="groupBox_3">
+                                      <property name="title">
+                                          <string>Window:</string>
+                                      </property>
+                                      <layout class="QGridLayout" name="gridLayout_3">
+                                          <item row="0" column="1">
+                                              <widget class="QLabel" name="label_9">
+                                                  <property name="text">
+                                                      <string>Width:</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="0" column="0">
+                                              <widget class="QLabel" name="label_8">
+                                                  <property name="text">
+                                                      <string>Level:</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="1" column="1">
+                                              <widget class="QSpinBox" name="windowWidthSpinBox">
+                                                  <property name="minimum">
+                                                      <number>1</number>
+                                                  </property>
+                                                  <property name="maximum">
+                                                      <number>10000</number>
+                                                  </property>
+                                                  <property name="value">
+                                                      <number>400</number>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="2" column="0">
+                                              <widget class="QLabel" name="label_10">
+                                                  <property name="text">
+                                                      <string>Bottom:</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="1" column="0">
+                                              <widget class="QSpinBox" name="windowLevelSpinBox">
+                                                  <property name="sizePolicy">
+                                                      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                                                          <horstretch>0</horstretch>
+                                                          <verstretch>0</verstretch>
+                                                      </sizepolicy>
+                                                  </property>
+                                                  <property name="minimum">
+                                                      <number>-10000</number>
+                                                  </property>
+                                                  <property name="maximum">
+                                                      <number>10000</number>
+                                                  </property>
+                                                  <property name="value">
+                                                      <number>200</number>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="2" column="1">
+                                              <widget class="QLabel" name="label_11">
+                                                  <property name="text">
+                                                      <string>Top</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="3" column="0">
+                                              <widget class="QSpinBox" name="windowBottomSpinBox">
+                                                  <property name="minimum">
+                                                      <number>-10000</number>
+                                                  </property>
+                                                  <property name="maximum">
+                                                      <number>10000</number>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item row="3" column="1">
+                                              <widget class="QSpinBox" name="windowTopspinBox">
+                                                  <property name="minimum">
+                                                      <number>-10000</number>
+                                                  </property>
+                                                  <property name="maximum">
+                                                      <number>10000</number>
+                                                  </property>
+                                                  <property name="value">
+                                                      <number>400</number>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                      </layout>
+                                  </widget>
+                              </item>
+                          </layout>
+                      </widget>
+                  </item>
+                  <item>
+                      <widget class="QTabWidget" name="tabWidget">
+                          <property name="currentIndex">
+                              <number>0</number>
+                          </property>
+                          <widget class="QWidget" name="tab">
+                              <attribute name="title">
+                                  <string>Tab 1</string>
+                              </attribute>
+                          </widget>
+                          <widget class="QWidget" name="tab_2">
+                              <attribute name="title">
+                                  <string>Tab 2</string>
+                              </attribute>
+                          </widget>
+                      </widget>
+                  </item>
+              </layout>
+          </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
@@ -61,12 +352,36 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3"/>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2"/>
-    </item>
+          <item>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+                  <property name="leftMargin">
+                      <number>5</number>
+                  </property>
+                  <item>
+                      <widget class="QLabel" name="label_12">
+                          <property name="text">
+                              <string>Targets:</string>
+                          </property>
+                      </widget>
+                  </item>
+                  <item>
+                      <widget class="QListWidget" name="targetList"/>
+                  </item>
+                  <item>
+                      <spacer name="verticalSpacer_2">
+                          <property name="orientation">
+                              <enum>Qt::Vertical</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                              <size>
+                                  <width>20</width>
+                                  <height>40</height>
+                              </size>
+                          </property>
+                      </spacer>
+                  </item>
+              </layout>
+          </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -74,7 +389,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1080</width>
+        <width>1081</width>
      <height>22</height>
     </rect>
    </property>
@@ -111,12 +426,12 @@
    <class>ASCGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>controller.graphics_view_controller</header>
-   <slots>
-    <signal>view_scale_signal(float,float)</signal>
-    <signal>view_set_cursor_signal(int,int,int)</signal>
-    <signal>view_move_cursor_signal(int,int,int)</signal>
-    <slot>set_cross_bar(int,int,int)</slot>
-   </slots>
+      <slots>
+          <signal>scale_signal(float,float)</signal>
+          <signal>set_focus_point_signal(int,int,int)</signal>
+          <signal>move_focus_point_signal(int,int,int)</signal>
+          <slot>set_cross_bar(int,int,int)</slot>
+      </slots>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -155,115 +470,131 @@
   </connection>
   <connection>
    <sender>aGraphicsView</sender>
-   <signal>view_scale_signal(float,float)</signal>
+      <signal>scale_signal(float,float)</signal>
    <receiver>MainWindow</receiver>
    <slot>scale_all_scenes(float,float)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>350</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>359</y>
+       <hint type="sourcelabel">
+           <x>238</x>
+           <y>297</y>
+       </hint>
+       <hint type="destinationlabel">
+           <x>70</x>
+           <y>288</y>
+       </hint>
+   </hints>
+  </connection>
+     <connection>
+         <sender>aGraphicsView</sender>
+         <signal>move_focus_point_signal(int,int,int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>move_focus_point(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>225</x>
+                 <y>322</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>88</x>
+                 <y>325</y>
+             </hint>
+   </hints>
+  </connection>
+     <connection>
+         <sender>aGraphicsView</sender>
+         <signal>set_focus_point_signal(int,int,int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>set_focus_point(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>219</x>
+                 <y>346</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>119</x>
+                 <y>359</y>
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>cGraphicsView</sender>
-   <signal>view_scale_signal(float,float)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>scale_all_scenes(float,float)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>350</x>
-     <y>526</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
+     <connection>
+         <sender>MainWindow</sender>
+         <signal>set_cross_bar_signal(int,int,int)</signal>
+         <receiver>aGraphicsView</receiver>
+         <slot>set_cross_bar(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>51</x>
+                 <y>232</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>194</x>
+                 <y>235</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>MainWindow</sender>
+         <signal>set_cross_bar_signal(int,int,int)</signal>
+         <receiver>sGraphicsView</receiver>
+         <slot>set_cross_bar(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>986</x>
+                 <y>68</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>837</x>
+                 <y>63</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>sGraphicsView</sender>
+         <signal>move_focus_point_signal(int,int,int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>move_focus_point(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>806</x>
+                 <y>121</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>949</x>
+                 <y>123</y>
+             </hint>
    </hints>
   </connection>
   <connection>
    <sender>sGraphicsView</sender>
-   <signal>view_scale_signal(float,float)</signal>
+      <signal>scale_signal(float,float)</signal>
    <receiver>MainWindow</receiver>
-   <slot>scale_all_scenes(float,float)</slot>
+      <slot>scale_all_scenes(float,float)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>694</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>824</x>
+           <y>175</y>
+       </hint>
+       <hint type="destinationlabel">
+           <x>980</x>
+           <y>177</y>
+       </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>aGraphicsView</sender>
-   <signal>view_move_cursor_signal(int,int,int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>move_cursor(int,int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>350</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cGraphicsView</sender>
-   <signal>view_move_cursor_signal(int,int,int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>move_cursor(int,int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>350</x>
-     <y>526</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sGraphicsView</sender>
-   <signal>view_move_cursor_signal(int,int,int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>move_cursor(int,int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>694</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>MainWindow</sender>
-   <signal>set_cross_bar_signal(int,int,int)</signal>
-   <receiver>aGraphicsView</receiver>
-   <slot>set_cross_bar(int,int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>350</x>
-     <y>194</y>
-    </hint>
-   </hints>
+     <connection>
+         <sender>sGraphicsView</sender>
+         <signal>set_focus_point_signal(int,int,int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>set_focus_point(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>785</x>
+                 <y>220</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>999</x>
+                 <y>234</y>
+             </hint>
+         </hints>
   </connection>
   <connection>
    <sender>MainWindow</sender>
@@ -271,38 +602,206 @@
    <receiver>cGraphicsView</receiver>
    <slot>set_cross_bar(int,int,int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>350</x>
-     <y>526</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>49</x>
+           <y>423</y>
+       </hint>
+       <hint type="destinationlabel">
+           <x>218</x>
+           <y>431</y>
+       </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>MainWindow</sender>
-   <signal>set_cross_bar_signal(int,int,int)</signal>
-   <receiver>sGraphicsView</receiver>
-   <slot>set_cross_bar(int,int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>539</x>
-     <y>359</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>694</x>
-     <y>194</y>
-    </hint>
-   </hints>
-  </connection>
+     <connection>
+         <sender>cGraphicsView</sender>
+         <signal>move_focus_point_signal(int,int,int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>move_focus_point(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>234</x>
+                 <y>500</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>75</x>
+                 <y>476</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>cGraphicsView</sender>
+         <signal>scale_signal(float,float)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>scale_all_scenes(float,float)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>241</x>
+                 <y>534</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>87</x>
+                 <y>530</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>cGraphicsView</sender>
+         <signal>set_focus_point_signal(int,int,int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>set_focus_point(int,int,int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>238</x>
+                 <y>591</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>86</x>
+                 <y>584</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>xSpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_x_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>28</x>
+                 <y>503</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>12</x>
+                 <y>196</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>ySpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_y_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>87</x>
+                 <y>503</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>81</x>
+                 <y>204</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>zSpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_z_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>135</x>
+                 <y>503</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>145</x>
+                 <y>201</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>windowLevelSpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_window_level_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>47</x>
+                 <y>571</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>10</x>
+                 <y>693</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>windowWidthSpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_window_width_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>113</x>
+                 <y>570</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>160</x>
+                 <y>697</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>windowBottomSpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_window_bottom_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>55</x>
+                 <y>618</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>55</x>
+                 <y>698</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>windowTopspinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_window_top_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>108</x>
+                 <y>615</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>106</x>
+                 <y>697</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>targetList</sender>
+         <signal>itemClicked(QListWidgetItem*)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_target_list_item_clicked(QListWidgetItem*)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>941</x>
+                 <y>309</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>941</x>
+                 <y>489</y>
+             </hint>
+         </hints>
+     </connection>
  </connections>
- <slots>
-  <signal>set_cross_bar_signal(int,int,int)</signal>
-  <slot>menu_open_triggered()</slot>
-  <slot>scale_all_scenes(float,float)</slot>
-  <slot>move_cursor(int,int,int)</slot>
-  <slot>set_cursor(int,int,int)</slot>
- </slots>
+    <slots>
+        <signal>set_cross_bar_signal(int,int,int)</signal>
+        <slot>menu_open_triggered()</slot>
+        <slot>scale_all_scenes(float,float)</slot>
+        <slot>move_focus_point(int,int,int)</slot>
+        <slot>set_focus_point(int,int,int)</slot>
+        <slot>on_x_spin_box_value_changed(int)</slot>
+        <slot>on_y_spin_box_value_changed(int)</slot>
+        <slot>on_z_spin_box_value_changed(int)</slot>
+        <slot>on_window_top_spin_box_value_changed(int)</slot>
+        <slot>on_window_bottom_spin_box_value_changed(int)</slot>
+        <slot>on_window_level_spin_box_value_changed(int)</slot>
+        <slot>on_window_width_spin_box_value_changed(int)</slot>
+        <slot>on_target_list_item_clicked(QListWidgetItem*)</slot>
+    </slots>
 </ui>
