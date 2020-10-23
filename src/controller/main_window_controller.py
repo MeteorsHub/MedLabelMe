@@ -1,7 +1,11 @@
+import os
+from enum import Enum
+
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
-from PyQt5.QtGui import QPixmap, QImage, QIcon
+from PyQt5.QtGui import QPixmap, QImage, QIcon, QCursor
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QPushButton, QListWidgetItem
 
+from controller.graphics_view_controller import BRUSH_TYPE_NO_BRUSH, BRUSH_TYPE_RECT_BRUSH, BRUSH_TYPE_CIRCLE_BRUSH
 from model.model import Model
 from utils.exception_utils import ImageTypeError
 from view.main_window_ui import Ui_MainWindow
@@ -9,6 +13,11 @@ from view.main_window_ui import Ui_MainWindow
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     set_cross_bar_signal = pyqtSignal('int', 'int', 'int')
+    set_brush_stats_signal = pyqtSignal('int', 'int')
+
+    class OpMode(Enum):
+        CURSOR = 1
+        BRUSH = 2
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -18,6 +27,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self._focus_point = [0, 0, 0]  # w, h, d or x, y, z
         self._hu_window = [0, 400]
+        self._operation_mode = self.OpMode.CURSOR
+        self._paint_cursor_pixmap = QPixmap()
+        self._paint_cursor = QCursor(self._paint_cursor_pixmap)
 
         self.clear_views()
 
@@ -67,6 +79,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 QImage.Format_RGBA8888)))
 
     def update_anno_targets_list(self):
+        self.model.compute_img_stats('anno')
         self.targetList.clear()
         num_labels = self.model.get_anno_num_labels()
         for i_label in range(1, num_labels + 1):
@@ -76,10 +89,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             icon = QIcon(pixmap)
             # items
             target_centers = self.model.get_anno_target_centers_for_label(i_label)  # [n, (d, h, w)]
+            target_ids = self.model.get_anno_target_ids()
             for i_centers in range(len(target_centers)):
                 item = QListWidgetItem('[Label_%d] #%d' % (i_label, i_centers + 1))
                 item.setIcon(icon)
-                item.target_id = i_centers + 1
+                item.target_id = target_ids[i_centers]
                 item.target_label = i_label
                 self.targetList.addItem(item)
 
@@ -99,8 +113,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.valueUnderCursorList.addItem(QListWidgetItem())
         self.valueUnderCursorList.addItem(QListWidgetItem())
         self.update_anno_targets_list()
+        self.operation_mode = self.OpMode.CURSOR
+        self.opModeTab.setCurrentIndex(0)
 
     def clear_views(self):
+        """welcome page and after clear images"""
         self._focus_point = [0, 0, 0]
         self.aGraphicsView.clear()
         self.sGraphicsView.clear()
@@ -114,6 +131,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i in range(self.valueUnderCursorList.count()):
             self.valueUnderCursorList.item(0).setText('')
         self.targetList.clear()
+        self.operation_mode = self.OpMode.CURSOR
+        self.opModeTab.setCurrentIndex(0)
+        self.brushSizeSpinBox.setValue(5)
+
+    @property
+    def operation_mode(self):
+        return self._operation_mode
+
+    @operation_mode.setter
+    def operation_mode(self, mode):
+        if not isinstance(mode, self.OpMode):
+            return
+        if mode == self.OpMode.CURSOR:
+            self.opModeTab.setCurrentIndex(0)
+        if mode == self.OpMode.BRUSH:
+            self.opModeTab.setCurrentIndex(1)
+
+        if self._operation_mode != mode:
+            if mode == self.OpMode.CURSOR:
+                self.set_brush_stats_signal.emit(BRUSH_TYPE_NO_BRUSH, 5)
+            if mode == self.OpMode.BRUSH:
+                if self.circleRadioButton.isChecked():
+                    self.set_brush_stats_signal.emit(BRUSH_TYPE_CIRCLE_BRUSH, self.brushSizeSlider.value())
+                elif self.rectRadioButton.isChecked():
+                    self.set_brush_stats_signal.emit(BRUSH_TYPE_RECT_BRUSH, self.brushSizeSlider.value())
+            self._operation_mode = mode
 
     @property
     def focus_point(self):
@@ -262,6 +305,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.warning(self, 'Wrong image type!', e.__str__())
             self.clear_views()
 
+    @pyqtSlot()
+    def menu_save_triggered(self):
+        if not self.model.is_valid():
+            return
+        if os.path.exists(self.model.get_img_filepath('anno')):
+            default_filename = self.model.get_img_filepath('anno')
+        else:
+            default_filename = os.path.join(self.model.last_wd, os.path.basename(self.model.get_img_filepath('raw')))
+
+        filename, _ = QFileDialog.getSaveFileName(
+            self, 'select where to save the annotation file', default_filename, filter='*.nii.gz')
+        self.model.save_anno(filename)
+
+    @pyqtSlot()
+    def menu_close_triggered(self):
+        self.model.clear()
+        self.clear_views()
+
     @pyqtSlot('int')
     def on_x_spin_box_value_changed(self, x):
         for i, spin_box in enumerate([self.xSpinBox, self.ySpinBox, self.zSpinBox]):
@@ -331,3 +392,58 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         target_centers = self.model.get_anno_target_centers_for_label(item.target_label)
         d, h, w = target_centers[item.target_id - 1]
         self.set_focus_point(w, h, d)
+
+    @pyqtSlot('int')
+    def on_current_op_mode_tab_changed(self, current_index):
+        if current_index == 0:
+            self.operation_mode = self.OpMode.CURSOR
+        if current_index == 1:
+            self.operation_mode = self.OpMode.BRUSH
+
+    @pyqtSlot('int')
+    def on_brush_size_changed(self, size):
+        if self.operation_mode == self.OpMode.CURSOR:
+            return
+        if self.circleRadioButton.isChecked():
+            self.set_brush_stats_signal.emit(BRUSH_TYPE_CIRCLE_BRUSH, size)
+        elif self.rectRadioButton.isChecked():
+            self.set_brush_stats_signal.emit(BRUSH_TYPE_RECT_BRUSH, size)
+
+    @pyqtSlot()
+    def on_brush_type_clicked(self):
+        if self.operation_mode == self.OpMode.CURSOR:
+            return
+        size = self.brushSizeSlider.value()
+        if self.circleRadioButton.isChecked():
+            self.set_brush_stats_signal.emit(BRUSH_TYPE_CIRCLE_BRUSH, size)
+        elif self.rectRadioButton.isChecked():
+            self.set_brush_stats_signal.emit(BRUSH_TYPE_RECT_BRUSH, size)
+
+    @pyqtSlot('int', 'int', 'int', 'int', 'int', 'bool')
+    def on_paint_on_point(self, x, y, z, brush_type, brush_size, erase):
+        if x > 100000:  # bigger than this value means painting axis
+            axis = 'x'
+            x = self.focus_point[0]
+        if y > 100000:
+            axis = 'xy'
+            y = self.focus_point[1]
+        if z > 100000:
+            axis = 'z'
+            z = self.focus_point[2]
+        label = 1
+        self.model.anno_paint(x, y, z, axis, label, brush_type, brush_size, erase)
+        self.update_scenes('asc')
+
+    @pyqtSlot()
+    def on_refresh_list_button_clicked(self):
+        self.update_anno_targets_list()
+
+    @pyqtSlot()
+    def on_delete_target_button_clicked(self):
+        selected_target = self.targetList.currentItem()
+        if selected_target is None:
+            return
+        target_id = selected_target.target_id
+        self.model.delete_target(target_id)
+        self.update_scenes('asc')
+        self.update_anno_targets_list()
