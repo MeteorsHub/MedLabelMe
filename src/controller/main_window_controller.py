@@ -28,8 +28,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._focus_point = [0, 0, 0]  # w, h, d or x, y, z
         self._hu_window = [0, 400]
         self._operation_mode = self.OpMode.CURSOR
-        self._paint_cursor_pixmap = QPixmap()
-        self._paint_cursor = QCursor(self._paint_cursor_pixmap)
 
         self.clear_views()
 

@@ -65,6 +65,8 @@ class ASCGraphicsView(QGraphicsView):
 
         self.setResizeAnchor(QGraphicsView.AnchorViewCenter)
 
+        self.is_valid = False
+
     def clear(self):
         """before loading new image"""
         self._last_pos_middle_button = None
@@ -74,9 +76,11 @@ class ASCGraphicsView(QGraphicsView):
         self.anno_img_item.setPixmap(QPixmap())
         self.paint_brush_circle_item.setVisible(False)
         self.paint_brush_rect_item.setVisible(False)
+        self.is_valid = False
 
     def init_view(self):
         """after loading new image"""
+        self.is_valid = True
         trans_mat = item2scene_transform[self.objectName()[0]]
         self.raw_img_item.setTransform(trans_mat)
         self.anno_img_item.setTransform(trans_mat)
@@ -105,7 +109,7 @@ class ASCGraphicsView(QGraphicsView):
             self.setMouseTracking(False)
 
     def update_brush_preview(self, x, y, out_of_sight=False):
-        if self.brush_stats['type'] == BRUSH_TYPE_NO_BRUSH or out_of_sight:
+        if not self.is_valid or self.brush_stats['type'] == BRUSH_TYPE_NO_BRUSH or out_of_sight:
             self.paint_brush_rect_item.setVisible(False)
             self.paint_brush_circle_item.setVisible(False)
             return
