@@ -1,13 +1,13 @@
 import os
 from enum import Enum
 
-from PyQt5.QtCore import pyqtSlot, pyqtSignal
-from PyQt5.QtGui import QPixmap, QImage, QIcon, QCursor
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QPushButton, QListWidgetItem
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, Qt
+from PyQt5.QtGui import QPixmap, QImage, QIcon
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QPushButton, QListWidgetItem, QSpinBox
 
 from controller.graphics_view_controller import BRUSH_TYPE_NO_BRUSH, BRUSH_TYPE_RECT_BRUSH, BRUSH_TYPE_CIRCLE_BRUSH
 from model.model import Model
-from utils.exception_utils import ImageTypeError
+from utils.exception_utils import ImageTypeError, ChangeNotSavedError
 from view.main_window_ui import Ui_MainWindow
 
 
@@ -23,58 +23,72 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.parent = parent
         self.setupUi(self)
+        self.setWindowState(Qt.WindowMaximized)
         self.model = Model()
 
         self._focus_point = [0, 0, 0]  # w, h, d or x, y, z
         self._hu_window = [0, 400]
+        self._label_opacity = 50  # 0-100
         self._operation_mode = self.OpMode.CURSOR
 
         self.clear_views()
 
-    def update_scenes(self, scenes='asc'):
+    def update_scenes(self, scenes='asc', raw=True, anno=True):
         if not self.model.is_valid():
             return
         if 'a' in scenes:
-            self.aGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map_in_window('a', self.focus_point[2], 'raw', self.window_bottom, self.window_top),
-                self.model.get_size()[1],
-                self.model.get_size()[0],
-                self.model.get_size()[1] * 1,  # bytesperline = width*channel
-                QImage.Format_Grayscale8)))  # x, y
-            self.aGraphicsView.anno_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map_in_window('a', self.focus_point[2], 'anno', colored_anno=True, alpha=0.5),
-                self.model.get_size()[1],
-                self.model.get_size()[0],
-                self.model.get_size()[1] * 4,  # bytesperline = width*channel
-                QImage.Format_RGBA8888)))  # x, y
+            if raw:
+                self.aGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
+                    self.model.get_2D_map_in_window('a', self.focus_point[2], 'raw', self.window_bottom,
+                                                    self.window_top),
+                    self.model.get_size()[1],
+                    self.model.get_size()[0],
+                    self.model.get_size()[1] * 1,  # bytesperline = width*channel
+                    QImage.Format_Grayscale8)))  # x, y
+            if anno:
+                self.aGraphicsView.anno_img_item.setPixmap(QPixmap.fromImage(QImage(
+                    self.model.get_2D_map_in_window('a', self.focus_point[2], 'anno', colored_anno=True,
+                                                    alpha=self.label_opacity / 100),
+                    self.model.get_size()[1],
+                    self.model.get_size()[0],
+                    self.model.get_size()[1] * 4,  # bytesperline = width*channel
+                    QImage.Format_RGBA8888)))  # x, y
 
         if 's' in scenes:
-            self.sGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map_in_window('s', self.focus_point[0], 'raw', self.window_bottom, self.window_top),
-                self.model.get_size()[2],
-                self.model.get_size()[1],
-                self.model.get_size()[2] * 1,  # bytesperline = width*channel
-                QImage.Format_Grayscale8)))
-            self.sGraphicsView.anno_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map_in_window('s', self.focus_point[0], 'anno', colored_anno=True, alpha=0.5),
-                self.model.get_size()[2],
-                self.model.get_size()[1],
-                self.model.get_size()[2] * 4,  # bytesperline = width*channel
-                QImage.Format_RGBA8888)))
+            if raw:
+                self.sGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
+                    self.model.get_2D_map_in_window('s', self.focus_point[0], 'raw', self.window_bottom,
+                                                    self.window_top),
+                    self.model.get_size()[2],
+                    self.model.get_size()[1],
+                    self.model.get_size()[2] * 1,  # bytesperline = width*channel
+                    QImage.Format_Grayscale8)))
+            if anno:
+                self.sGraphicsView.anno_img_item.setPixmap(QPixmap.fromImage(QImage(
+                    self.model.get_2D_map_in_window('s', self.focus_point[0], 'anno', colored_anno=True,
+                                                    alpha=self.label_opacity / 100),
+                    self.model.get_size()[2],
+                    self.model.get_size()[1],
+                    self.model.get_size()[2] * 4,  # bytesperline = width*channel
+                    QImage.Format_RGBA8888)))
 
         if 'c' in scenes:
-            self.cGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map_in_window('c', self.focus_point[1], 'raw', self.window_bottom, self.window_top),
-                self.model.get_size()[2],
-                self.model.get_size()[0],
-                self.model.get_size()[2] * 1,  # bytesperline = width*channel
-                QImage.Format_Grayscale8)))
-            self.cGraphicsView.anno_img_item.setPixmap(QPixmap.fromImage(QImage(
-                self.model.get_2D_map_in_window('c', self.focus_point[1], 'anno', colored_anno=True, alpha=0.5),
-                self.model.get_size()[2],
-                self.model.get_size()[0],
-                self.model.get_size()[2] * 4,  # bytesperline = width*channel
-                QImage.Format_RGBA8888)))
+            if raw:
+                self.cGraphicsView.raw_img_item.setPixmap(QPixmap.fromImage(QImage(
+                    self.model.get_2D_map_in_window('c', self.focus_point[1], 'raw', self.window_bottom,
+                                                    self.window_top),
+                    self.model.get_size()[2],
+                    self.model.get_size()[0],
+                    self.model.get_size()[2] * 1,  # bytesperline = width*channel
+                    QImage.Format_Grayscale8)))
+            if anno:
+                self.cGraphicsView.anno_img_item.setPixmap(QPixmap.fromImage(QImage(
+                    self.model.get_2D_map_in_window('c', self.focus_point[1], 'anno', colored_anno=True,
+                                                    alpha=self.label_opacity / 100),
+                    self.model.get_size()[2],
+                    self.model.get_size()[0],
+                    self.model.get_size()[2] * 4,  # bytesperline = width*channel
+                    QImage.Format_RGBA8888)))
 
     def update_anno_targets_list(self):
         self.model.compute_img_stats('anno')
@@ -98,9 +112,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def init_views(self):
         """after new file loaded"""
         self.update_scenes('asc')
-        self.aGraphicsView.init_view()
-        self.sGraphicsView.init_view()
-        self.cGraphicsView.init_view()
+        self.aGraphicsView.init_view(self.model.get_size())
+        self.sGraphicsView.init_view(self.model.get_size())
+        self.cGraphicsView.init_view(self.model.get_size())
         self.xSpinBox.setMaximum(self.model.get_size()[0])
         self.ySpinBox.setMaximum(self.model.get_size()[1])
         self.zSpinBox.setMaximum(self.model.get_size()[2])
@@ -194,6 +208,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_scenes(scenes)
 
     @property
+    def label_opacity(self):
+        return self._label_opacity
+
+    @label_opacity.setter
+    def label_opacity(self, lo):
+        if lo < 0:
+            lo = 0
+        if lo > 100:
+            lo == 100
+        self._label_opacity = lo
+        self.findChild(QSpinBox, 'labelOpacitySpinBox').setValue(lo)
+        self.update_scenes('asc', raw=False)
+
+    @property
     def window_bottom(self):
         return self._hu_window[0]
 
@@ -220,14 +248,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if bottom < self.window_top:
             self._hu_window[0] = bottom
         self.set_hu_window_ui()
-        self.update_scenes('asc')
+        self.update_scenes('asc', anno=False)
 
     @window_top.setter
     def window_top(self, top):
         if top > self.window_bottom:
             self._hu_window[1] = top
         self.set_hu_window_ui()
-        self.update_scenes('asc')
+        self.update_scenes('asc', anno=False)
 
     @window_level.setter
     def window_level(self, level):
@@ -235,7 +263,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._hu_window[0] += level - old_level
         self._hu_window[1] += level - old_level
         self.set_hu_window_ui()
-        self.update_scenes('asc')
+        self.update_scenes('asc', anno=False)
 
     @window_width.setter
     def window_width(self, width):
@@ -243,13 +271,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._hu_window[0] = level - width // 2
         self._hu_window[1] = self._hu_window[0] + width
         self.set_hu_window_ui()
-        self.update_scenes('asc')
+        self.update_scenes('asc', anno=False)
 
     @pyqtSlot('float', 'float')
     def scale_all_scenes(self, scale_x, scale_y):
         self.aGraphicsView.scale(scale_x, scale_y)
         self.sGraphicsView.scale(scale_x, scale_y)
         self.cGraphicsView.scale(scale_x, scale_y)
+
+    @pyqtSlot('int')
+    def on_label_opacity_spin_box_changed(self, value):
+        self.label_opacity = value
 
     @pyqtSlot('int', 'int', 'int')
     def move_focus_point(self, delta_x, delta_y, delta_z):
@@ -263,9 +295,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 new_focus_point[i] = item
         self.focus_point = new_focus_point
 
+    @pyqtSlot('float', 'float', 'float')
+    def set_focus_point_by_ratio(self, xr, yr, zr):
+        new_focus_point = self.focus_point
+        for i, item in enumerate([xr, yr, zr]):
+            if item >= 0:  # -1 means no change
+                new_focus_point[i] = round(item * self.model.get_size()[i])
+        self.focus_point = new_focus_point
+
     @pyqtSlot()
     def menu_open_triggered(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'select file to open', self.model.last_wd, filter='*.nii.gz')
+        filename, _ = QFileDialog.getOpenFileName(self, 'select file to open', self.model.last_read_dir,
+                                                  filter='*.nii.gz')
         if not filename:
             return
 
@@ -307,10 +348,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def menu_save_triggered(self):
         if not self.model.is_valid():
             return
-        if os.path.exists(self.model.get_img_filepath('anno')):
-            default_filename = self.model.get_img_filepath('anno')
-        else:
-            default_filename = os.path.join(self.model.last_wd, os.path.basename(self.model.get_img_filepath('raw')))
+        # if os.path.exists(self.model.get_img_filepath('anno')):
+        #     default_filename = self.model.get_img_filepath('anno')
+        # else:
+        default_filename = os.path.join(self.model.last_save_dir, os.path.basename(self.model.get_img_filepath('raw')))
 
         filename, _ = QFileDialog.getSaveFileName(
             self, 'select where to save the annotation file', default_filename, filter='*.nii.gz')
@@ -417,8 +458,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif self.rectRadioButton.isChecked():
             self.set_brush_stats_signal.emit(BRUSH_TYPE_RECT_BRUSH, size)
 
-    @pyqtSlot('int', 'int', 'int', 'int', 'int', 'bool')
-    def on_paint_on_point(self, x, y, z, brush_type, brush_size, erase):
+    @pyqtSlot('int', 'int', 'int', 'int', 'int', 'bool', 'bool')
+    def on_paint_on_point(self, x, y, z, brush_type, brush_size, erase, new_step):
         if x > 100000:  # bigger than this value means painting axis
             axis = 'x'
             x = self.focus_point[0]
@@ -429,8 +470,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             axis = 'z'
             z = self.focus_point[2]
         label = 1
-        self.model.anno_paint(x, y, z, axis, label, brush_type, brush_size, erase)
-        self.update_scenes('asc')
+        self.model.anno_paint(x, y, z, axis, label, brush_type, brush_size, erase, new_step)
+        self.update_scenes('asc', raw=False)
 
     @pyqtSlot()
     def on_refresh_list_button_clicked(self):
@@ -442,6 +483,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if selected_target is None:
             return
         target_id = selected_target.target_id
-        self.model.delete_target(target_id)
-        self.update_scenes('asc')
-        self.update_anno_targets_list()
+        try:
+            self.model.delete_target(target_id)
+            self.update_scenes('asc', raw=False)
+            self.update_anno_targets_list()
+        except ChangeNotSavedError as e:
+            QMessageBox.warning(self, 'Refresh before Delete!', e.__str__())
+
+    @pyqtSlot()
+    def menu_undo_paint_triggered(self):
+        if self.model.undo_paint():
+            self.update_scenes(raw=False)
+
+    @pyqtSlot()
+    def menu_redo_paint_triggered(self):
+        if self.model.redo_paint():
+            self.update_scenes(raw=False)
+
+    @pyqtSlot()
+    def menu_toggle_label_visibility(self):
+        if self.label_opacity > 0:
+            self.label_opacity = 0
+        else:
+            self.label_opacity = 50

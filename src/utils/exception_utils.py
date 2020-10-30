@@ -27,3 +27,16 @@ class ImageTypeError(Exception):
         if self.preferred_img_type is not None:
             msg += '\npreferred image type: %s' % self.preferred_img_type
         return msg
+
+
+class ChangeNotSavedError(Exception):
+    """ check if the changed are saved """
+
+    def __init__(self, description=None):
+        if description is None:
+            self.description = 'Change not saved!'
+        else:
+            self.description = description
+
+    def __str__(self):
+        return self.description

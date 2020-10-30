@@ -4,10 +4,10 @@
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1377</width>
-    <height>849</height>
+       <x>0</x>
+       <y>0</y>
+       <width>1025</width>
+       <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -200,91 +200,103 @@
            <property name="title">
             <string>Window:</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>Width:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_8">
-              <property name="text">
-               <string>Level:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="windowWidthSpinBox">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-              <property name="value">
-               <number>400</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Bottom:</string>
-              </property>
-             </widget>
+              <layout class="QGridLayout" name="gridLayout_3">
+                  <item row="0" column="1">
+                      <widget class="QLabel" name="label_9">
+                          <property name="text">
+                              <string>Width:</string>
+                          </property>
+                      </widget>
+                  </item>
+                  <item row="3" column="0">
+                      <widget class="QSpinBox" name="windowBottomSpinBox">
+                          <property name="minimum">
+                              <number>-10000</number>
+                          </property>
+                          <property name="maximum">
+                              <number>10000</number>
+                          </property>
+                          <property name="singleStep">
+                              <number>10</number>
+                          </property>
+                      </widget>
             </item>
             <item row="1" column="0">
              <widget class="QSpinBox" name="windowLevelSpinBox">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimum">
-               <number>-10000</number>
-              </property>
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-              <property name="value">
-               <number>200</number>
-              </property>
+                 <property name="minimum">
+                     <number>-10000</number>
+                 </property>
+                 <property name="maximum">
+                     <number>10000</number>
+                 </property>
+                 <property name="singleStep">
+                     <number>10</number>
+                 </property>
+                 <property name="value">
+                     <number>200</number>
+                 </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>Top</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QSpinBox" name="windowBottomSpinBox">
-              <property name="minimum">
-               <number>-10000</number>
-              </property>
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="windowTopspinBox">
-              <property name="minimum">
-               <number>-10000</number>
-              </property>
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-              <property name="value">
-               <number>400</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+                  <item row="1" column="1">
+                      <widget class="QSpinBox" name="windowWidthSpinBox">
+                          <property name="minimum">
+                              <number>1</number>
+                          </property>
+                          <property name="maximum">
+                              <number>10000</number>
+                          </property>
+                          <property name="singleStep">
+                              <number>10</number>
+                          </property>
+                          <property name="value">
+                              <number>400</number>
+                          </property>
+                      </widget>
+                  </item>
+                  <item row="0" column="0">
+                      <widget class="QLabel" name="label_8">
+                          <property name="text">
+                              <string>Level:</string>
+                          </property>
+                      </widget>
+                  </item>
+                  <item row="3" column="1">
+                      <widget class="QSpinBox" name="windowTopspinBox">
+                          <property name="minimum">
+                              <number>-10000</number>
+                          </property>
+                          <property name="maximum">
+                              <number>10000</number>
+                          </property>
+                          <property name="singleStep">
+                              <number>10</number>
+                          </property>
+                          <property name="value">
+                              <number>400</number>
+                          </property>
+                      </widget>
+                  </item>
+                  <item row="2" column="1">
+                      <widget class="QLabel" name="label_11">
+                          <property name="text">
+                              <string>Top</string>
+                          </property>
+                      </widget>
+                  </item>
+                  <item row="2" column="0">
+                      <widget class="QLabel" name="label_10">
+                          <property name="text">
+                              <string>Bottom:</string>
+                          </property>
+                      </widget>
+                  </item>
+              </layout>
           </widget>
          </item>
         </layout>
@@ -293,58 +305,91 @@
      </layout>
     </item>
     <item>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="ASCGraphicsView" name="sGraphicsView">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>100</height>
-         </size>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="ASCGraphicsView" name="aGraphicsView">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>100</height>
-         </size>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="dragMode">
-         <enum>QGraphicsView::NoDrag</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="ASCGraphicsView" name="cGraphicsView">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>100</height>
-         </size>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-       </widget>
-      </item>
+        <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                    <item>
+                        <widget class="ASCGraphicsView" name="aGraphicsView">
+                            <property name="minimumSize">
+                                <size>
+                                    <width>300</width>
+                                    <height>100</height>
+                                </size>
+                            </property>
+                            <property name="verticalScrollBarPolicy">
+                                <enum>Qt::ScrollBarAlwaysOff</enum>
+                            </property>
+                            <property name="horizontalScrollBarPolicy">
+                                <enum>Qt::ScrollBarAlwaysOff</enum>
+                            </property>
+                            <property name="dragMode">
+                                <enum>QGraphicsView::NoDrag</enum>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QScrollBar" name="aSliceScrollBar">
+                            <property name="orientation">
+                                <enum>Qt::Vertical</enum>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item row="0" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                    <item>
+                        <widget class="ASCGraphicsView" name="sGraphicsView">
+                            <property name="minimumSize">
+                                <size>
+                                    <width>300</width>
+                                    <height>100</height>
+                                </size>
+                            </property>
+                            <property name="verticalScrollBarPolicy">
+                                <enum>Qt::ScrollBarAlwaysOff</enum>
+                            </property>
+                            <property name="horizontalScrollBarPolicy">
+                                <enum>Qt::ScrollBarAlwaysOff</enum>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QScrollBar" name="sSliceScrollBar">
+                            <property name="orientation">
+                                <enum>Qt::Vertical</enum>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item row="1" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                    <item>
+                        <widget class="ASCGraphicsView" name="cGraphicsView">
+                            <property name="minimumSize">
+                                <size>
+                                    <width>300</width>
+                                    <height>100</height>
+                                </size>
+                            </property>
+                            <property name="verticalScrollBarPolicy">
+                                <enum>Qt::ScrollBarAlwaysOff</enum>
+                            </property>
+                            <property name="horizontalScrollBarPolicy">
+                                <enum>Qt::ScrollBarAlwaysOff</enum>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QScrollBar" name="cSliceScrollBar">
+                            <property name="orientation">
+                                <enum>Qt::Vertical</enum>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
       <item row="1" column="1">
        <widget class="QOpenGLWidget" name="openGLWidget">
         <property name="minimumSize">
@@ -374,35 +419,68 @@
         <item>
          <widget class="QPushButton" name="refreshTargetListButton">
           <property name="text">
-           <string>Refresh</string>
+              <string>Refresh</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="QListWidget" name="targetList"/>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <item>
-         <widget class="QPushButton" name="deleteTargetButton">
-          <property name="text">
-           <string>Delete Selected Target</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Annotator</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTabWidget" name="opModeTab">
+         <item>
+             <widget class="QListWidget" name="targetList"/>
+         </item>
+         <item>
+             <widget class="QLabel" name="label_17">
+                 <property name="text">
+                     <string>Label Opacity (%):</string>
+                 </property>
+             </widget>
+         </item>
+         <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+                 <item>
+                     <widget class="QSpinBox" name="labelOpacitySpinBox">
+                         <property name="maximum">
+                             <number>100</number>
+                         </property>
+                         <property name="singleStep">
+                             <number>1</number>
+                         </property>
+                         <property name="value">
+                             <number>50</number>
+                         </property>
+                     </widget>
+                 </item>
+                 <item>
+                     <widget class="QSlider" name="labelOpacitySlider">
+                         <property name="maximum">
+                             <number>100</number>
+                         </property>
+                         <property name="value">
+                             <number>50</number>
+                         </property>
+                         <property name="orientation">
+                             <enum>Qt::Horizontal</enum>
+                         </property>
+                     </widget>
+                 </item>
+             </layout>
+         </item>
+         <item>
+             <widget class="QPushButton" name="deleteTargetButton">
+                 <property name="text">
+                     <string>Delete Selected Target</string>
+                 </property>
+             </widget>
+         </item>
+         <item>
+             <widget class="QLabel" name="label_13">
+                 <property name="text">
+                     <string>Annotator</string>
+                 </property>
+             </widget>
+         </item>
+         <item>
+             <widget class="QTabWidget" name="opModeTab">
         <property name="tabShape">
          <enum>QTabWidget::Rounded</enum>
         </property>
@@ -538,60 +616,102 @@
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1377</width>
-     <height>26</height>
-    </rect>
+       <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1025</width>
+           <height>22</height>
+       </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionClose"/>
-    <addaction name="separator"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <addaction name="menuFile"/>
+      <widget class="QMenu" name="menuFile">
+          <property name="title">
+              <string>File</string>
+          </property>
+          <addaction name="actionOpen"/>
+          <addaction name="actionSave"/>
+          <addaction name="actionClose"/>
+          <addaction name="separator"/>
+          <addaction name="actionExit"/>
+      </widget>
+      <widget class="QMenu" name="menuEdit">
+          <property name="title">
+              <string>Edit</string>
+          </property>
+          <addaction name="actionUndo"/>
+          <addaction name="actionRedo"/>
+          <addaction name="separator"/>
+          <addaction name="actionToggle_Label_Visibility"/>
+      </widget>
+      <addaction name="menuFile"/>
+      <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
+     <action name="actionOpen">
+         <property name="text">
+             <string>Open</string>
+         </property>
+         <property name="shortcut">
+             <string>Ctrl+O</string>
+         </property>
+     </action>
   <action name="actionClose">
    <property name="text">
     <string>Close</string>
    </property>
   </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
+     <action name="actionExit">
+         <property name="text">
+             <string>Exit</string>
+         </property>
+     </action>
+     <action name="actionSave">
+         <property name="text">
+             <string>Save</string>
+         </property>
+         <property name="shortcut">
+             <string>Ctrl+S</string>
+         </property>
+     </action>
+     <action name="actionUndo">
+         <property name="text">
+             <string>Undo Paint</string>
+         </property>
+         <property name="shortcut">
+             <string>Ctrl+Z</string>
+         </property>
+     </action>
+     <action name="actionRedo">
+         <property name="text">
+             <string>Redo Paint</string>
+         </property>
+         <property name="shortcut">
+             <string>Ctrl+Shift+Z</string>
+         </property>
+     </action>
+     <action name="actionToggle_Label_Visibility">
+         <property name="text">
+             <string>Toggle Label Visibility</string>
+         </property>
+         <property name="shortcut">
+             <string>S</string>
+         </property>
+     </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>ASCGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>controller.graphics_view_controller</header>
-   <slots>
-    <signal>scale_signal(float,float)</signal>
-    <signal>set_focus_point_signal(int,int,int)</signal>
-    <signal>move_focus_point_signal(int,int,int)</signal>
-    <signal>paint_anno_on_point_signal(int,int,int,int,int,bool)</signal>
-    <slot>set_cross_bar(int,int,int)</slot>
-    <slot>set_brush_stats(int,int)</slot>
-   </slots>
+      <slots>
+          <signal>scale_signal(float,float)</signal>
+          <signal>set_focus_point_signal(int,int,int)</signal>
+          <signal>move_focus_point_signal(int,int,int)</signal>
+          <signal>paint_anno_on_point_signal(int,int,int,int,int,bool,bool)</signal>
+          <signal>set_focus_point_percent_signal(float,float,float)</signal>
+          <slot>set_cross_bar(int,int,int)</slot>
+          <slot>set_brush_stats(int,int)</slot>
+          <slot>on_slice_scroll_bar_changed(int)</slot>
+      </slots>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -650,10 +770,10 @@
    <receiver>MainWindow</receiver>
    <slot>move_focus_point(int,int,int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>324</x>
-     <y>322</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>500</x>
+           <y>301</y>
+       </hint>
     <hint type="destinationlabel">
      <x>88</x>
      <y>325</y>
@@ -666,10 +786,10 @@
    <receiver>MainWindow</receiver>
    <slot>set_focus_point(int,int,int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>318</x>
-     <y>346</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>500</x>
+           <y>301</y>
+       </hint>
     <hint type="destinationlabel">
      <x>119</x>
      <y>359</y>
@@ -810,10 +930,10 @@
    <receiver>MainWindow</receiver>
    <slot>set_focus_point(int,int,int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>337</x>
-     <y>591</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>500</x>
+           <y>578</y>
+       </hint>
     <hint type="destinationlabel">
      <x>86</x>
      <y>584</y>
@@ -826,10 +946,10 @@
    <receiver>MainWindow</receiver>
    <slot>on_x_spin_box_value_changed(int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>49</x>
-     <y>560</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>68</x>
+           <y>450</y>
+       </hint>
     <hint type="destinationlabel">
      <x>12</x>
      <y>196</y>
@@ -844,7 +964,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>122</x>
-     <y>560</y>
+        <y>450</y>
     </hint>
     <hint type="destinationlabel">
      <x>81</x>
@@ -860,7 +980,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>176</x>
-     <y>560</y>
+        <y>450</y>
     </hint>
     <hint type="destinationlabel">
      <x>145</x>
@@ -874,13 +994,13 @@
    <receiver>MainWindow</receiver>
    <slot>on_window_level_spin_box_value_changed(int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>77</x>
-     <y>626</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>95</x>
+           <y>516</y>
+       </hint>
     <hint type="destinationlabel">
      <x>10</x>
-     <y>693</y>
+        <y>609</y>
     </hint>
    </hints>
   </connection>
@@ -892,43 +1012,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>167</x>
-     <y>626</y>
+        <y>516</y>
     </hint>
     <hint type="destinationlabel">
      <x>160</x>
-     <y>697</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>windowBottomSpinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>on_window_bottom_spin_box_value_changed(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>85</x>
-     <y>669</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>55</x>
-     <y>698</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>windowTopspinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>on_window_top_spin_box_value_changed(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>167</x>
-     <y>669</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>106</x>
-     <y>697</y>
+        <y>609</y>
     </hint>
    </hints>
   </connection>
@@ -954,14 +1042,14 @@
    <receiver>brushSizeSlider</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>951</x>
-     <y>419</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1048</x>
-     <y>415</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>899</x>
+           <y>462</y>
+       </hint>
+       <hint type="destinationlabel">
+           <x>986</x>
+           <y>458</y>
+       </hint>
    </hints>
   </connection>
   <connection>
@@ -970,14 +1058,14 @@
    <receiver>brushSizeSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>1048</x>
-     <y>415</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>951</x>
-     <y>419</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>986</x>
+           <y>458</y>
+       </hint>
+       <hint type="destinationlabel">
+           <x>899</x>
+           <y>462</y>
+       </hint>
    </hints>
   </connection>
   <connection>
@@ -1002,13 +1090,13 @@
    <receiver>MainWindow</receiver>
    <slot>on_brush_size_changed(int)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>997</x>
-     <y>415</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>984</x>
+           <y>458</y>
+       </hint>
     <hint type="destinationlabel">
      <x>1003</x>
-     <y>627</y>
+        <y>609</y>
     </hint>
    </hints>
   </connection>
@@ -1052,12 +1140,12 @@
    <hints>
     <hint type="sourcelabel">
      <x>450</x>
-     <y>696</y>
+        <y>609</y>
     </hint>
-    <hint type="destinationlabel">
-     <x>456</x>
-     <y>666</y>
-    </hint>
+       <hint type="destinationlabel">
+           <x>500</x>
+           <y>578</y>
+       </hint>
    </hints>
   </connection>
   <connection>
@@ -1066,10 +1154,10 @@
    <receiver>MainWindow</receiver>
    <slot>on_brush_type_clicked()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>1033</x>
-     <y>366</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>986</x>
+           <y>417</y>
+       </hint>
     <hint type="destinationlabel">
      <x>962</x>
      <y>532</y>
@@ -1082,21 +1170,21 @@
    <receiver>MainWindow</receiver>
    <slot>on_brush_type_clicked()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>948</x>
-     <y>364</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>919</x>
+           <y>417</y>
+       </hint>
     <hint type="destinationlabel">
-     <x>1038</x>
+        <x>1010</x>
      <y>555</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>aGraphicsView</sender>
-   <signal>paint_anno_on_point_signal(int,int,int,int,int,bool)</signal>
+      <signal>paint_anno_on_point_signal(int,int,int,int,int,bool,bool)</signal>
    <receiver>MainWindow</receiver>
-   <slot>on_paint_on_point(int,int,int,int,int,bool)</slot>
+      <slot>on_paint_on_point(int,int,int,int,int,bool,bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>495</x>
@@ -1104,39 +1192,39 @@
     </hint>
     <hint type="destinationlabel">
      <x>499</x>
-     <y>694</y>
+        <y>609</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>sGraphicsView</sender>
-   <signal>paint_anno_on_point_signal(int,int,int,int,int,bool)</signal>
+      <signal>paint_anno_on_point_signal(int,int,int,int,int,bool,bool)</signal>
    <receiver>MainWindow</receiver>
-   <slot>on_paint_on_point(int,int,int,int,int,bool)</slot>
+      <slot>on_paint_on_point(int,int,int,int,int,bool,bool)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>579</x>
-     <y>325</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>820</x>
+           <y>301</y>
+       </hint>
     <hint type="destinationlabel">
      <x>755</x>
-     <y>698</y>
+        <y>609</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>cGraphicsView</sender>
-   <signal>paint_anno_on_point_signal(int,int,int,int,int,bool)</signal>
+      <signal>paint_anno_on_point_signal(int,int,int,int,int,bool,bool)</signal>
    <receiver>MainWindow</receiver>
-   <slot>on_paint_on_point(int,int,int,int,int,bool)</slot>
+      <slot>on_paint_on_point(int,int,int,int,int,bool,bool)</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>318</x>
-     <y>671</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>500</x>
+           <y>578</y>
+       </hint>
     <hint type="destinationlabel">
      <x>315</x>
-     <y>693</y>
+        <y>609</y>
     </hint>
    </hints>
   </connection>
@@ -1146,13 +1234,13 @@
    <receiver>MainWindow</receiver>
    <slot>on_refresh_list_button_clicked()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>1039</x>
-     <y>42</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>999</x>
+           <y>55</y>
+       </hint>
     <hint type="destinationlabel">
      <x>981</x>
-     <y>-13</y>
+        <y>0</y>
     </hint>
    </hints>
   </connection>
@@ -1162,12 +1250,12 @@
    <receiver>MainWindow</receiver>
    <slot>on_delete_target_button_clicked()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>980</x>
-     <y>271</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>966</x>
+           <y>315</y>
+       </hint>
     <hint type="destinationlabel">
-     <x>1077</x>
+        <x>1010</x>
      <y>284</y>
     </hint>
    </hints>
@@ -1194,16 +1282,240 @@
    <receiver>MainWindow</receiver>
    <slot>menu_save_triggered()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>540</x>
-     <y>359</y>
-    </hint>
+       <hint type="sourcelabel">
+           <x>-1</x>
+           <y>-1</y>
+       </hint>
+       <hint type="destinationlabel">
+           <x>540</x>
+           <y>359</y>
+       </hint>
    </hints>
   </connection>
+     <connection>
+         <sender>aSliceScrollBar</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>aGraphicsView</receiver>
+         <slot>on_slice_scroll_bar_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>507</x>
+                 <y>167</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>423</x>
+                 <y>162</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>sSliceScrollBar</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>sGraphicsView</receiver>
+         <slot>on_slice_scroll_bar_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>826</x>
+                 <y>264</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>749</x>
+                 <y>267</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>cSliceScrollBar</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>cGraphicsView</receiver>
+         <slot>on_slice_scroll_bar_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>507</x>
+                 <y>405</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>465</x>
+                 <y>403</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>aGraphicsView</sender>
+         <signal>set_focus_point_percent_signal(float,float,float)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>set_focus_point_by_ratio(float,float,float)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>249</x>
+                 <y>85</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>240</x>
+                 <y>0</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>sGraphicsView</sender>
+         <signal>set_focus_point_percent_signal(float,float,float)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>set_focus_point_by_ratio(float,float,float)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>590</x>
+                 <y>64</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>581</x>
+                 <y>0</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>windowBottomSpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_window_bottom_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>95</x>
+                 <y>559</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>55</x>
+                 <y>609</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>windowTopspinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_window_top_spin_box_value_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>167</x>
+                 <y>559</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>106</x>
+                 <y>609</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>cGraphicsView</sender>
+         <signal>set_focus_point_percent_signal(float,float,float)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>set_focus_point_by_ratio(float,float,float)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>419</x>
+                 <y>557</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>420</x>
+                 <y>609</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>labelOpacitySpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>labelOpacitySlider</receiver>
+         <slot>setValue(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>866</x>
+                 <y>287</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>923</x>
+                 <y>289</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>labelOpacitySlider</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>labelOpacitySpinBox</receiver>
+         <slot>setValue(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>907</x>
+                 <y>288</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>874</x>
+                 <y>289</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>labelOpacitySpinBox</sender>
+         <signal>valueChanged(int)</signal>
+         <receiver>MainWindow</receiver>
+         <slot>on_label_opacity_spin_box_changed(int)</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>879</x>
+                 <y>292</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>876</x>
+                 <y>614</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>actionUndo</sender>
+         <signal>triggered()</signal>
+         <receiver>MainWindow</receiver>
+         <slot>menu_undo_paint_triggered()</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>-1</x>
+                 <y>-1</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>505</x>
+                 <y>304</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>actionRedo</sender>
+         <signal>triggered()</signal>
+         <receiver>MainWindow</receiver>
+         <slot>menu_redo_paint_triggered()</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>-1</x>
+                 <y>-1</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>505</x>
+                 <y>304</y>
+             </hint>
+         </hints>
+     </connection>
+     <connection>
+         <sender>actionToggle_Label_Visibility</sender>
+         <signal>triggered()</signal>
+         <receiver>MainWindow</receiver>
+         <slot>menu_toggle_label_visibility()</slot>
+         <hints>
+             <hint type="sourcelabel">
+                 <x>-1</x>
+                 <y>-1</y>
+             </hint>
+             <hint type="destinationlabel">
+                 <x>505</x>
+                 <y>304</y>
+             </hint>
+         </hints>
+     </connection>
  </connections>
  <slots>
   <signal>set_cross_bar_signal(int,int,int)</signal>
@@ -1220,15 +1532,20 @@
   <slot>on_window_level_spin_box_value_changed(int)</slot>
   <slot>on_window_width_spin_box_value_changed(int)</slot>
   <slot>on_target_list_item_clicked(QListWidgetItem*)</slot>
-  <slot>on_cursor_button_clicked()</slot>
-  <slot>on_brush_button_clicked()</slot>
-  <slot>on_current_op_mode_tab_changed(int)</slot>
-  <slot>on_brush_size_changed(int)</slot>
-  <slot>on_brush_type_clicked()</slot>
-  <slot>on_paint_on_point(int,int,int,int,int,bool)</slot>
-  <slot>on_refresh_list_button_clicked()</slot>
-  <slot>on_delete_target_button_clicked()</slot>
-  <slot>menu_close_triggered()</slot>
-  <slot>menu_save_triggered()</slot>
+     <slot>on_cursor_button_clicked()</slot>
+     <slot>on_brush_button_clicked()</slot>
+     <slot>on_current_op_mode_tab_changed(int)</slot>
+     <slot>on_brush_size_changed(int)</slot>
+     <slot>on_brush_type_clicked()</slot>
+     <slot>on_paint_on_point(int,int,int,int,int,bool,bool)</slot>
+     <slot>on_refresh_list_button_clicked()</slot>
+     <slot>on_delete_target_button_clicked()</slot>
+     <slot>menu_close_triggered()</slot>
+     <slot>menu_save_triggered()</slot>
+     <slot>set_focus_point_by_ratio(float,float,float)</slot>
+     <slot>on_label_opacity_spin_box_changed(int)</slot>
+     <slot>menu_undo_paint_triggered()</slot>
+     <slot>menu_redo_paint_triggered()</slot>
+     <slot>menu_toggle_label_visibility()</slot>
  </slots>
 </ui>

@@ -1,4 +1,5 @@
 import os
+from collections import deque
 
 import SimpleITK as sitk
 import cc3d
@@ -7,7 +8,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 
 from controller.graphics_view_controller import BRUSH_TYPE_NO_BRUSH, BRUSH_TYPE_RECT_BRUSH, BRUSH_TYPE_CIRCLE_BRUSH
-from utils.exception_utils import IllegalSizeError, ImageTypeError
+from utils.exception_utils import IllegalSizeError, ImageTypeError, ChangeNotSavedError
 
 
 class Model:
@@ -15,9 +16,12 @@ class Model:
         self._raw_img = None
         self._anno_img = None
         self._anno_img_edit = None  # d, h, w
+        self._anno_img_edit_undo_stack = deque(maxlen=10)
+        self._anno_img_edit_redo_stack = deque(maxlen=10)
         self._raw_img_filepath = None
         self._anno_img_filepath = None
-        self.last_wd = os.getcwd()
+        self.last_read_dir = os.getcwd()
+        self.last_save_dir = os.getcwd()
 
         self.label_colors = [QColor(Qt.red), QColor(Qt.green), QColor(Qt.yellow), QColor(Qt.magenta), QColor(Qt.blue)]
 
@@ -32,11 +36,14 @@ class Model:
             'target_centers': None,  # [n_targets]. order of target_ids.
             'target_id_map': None  # [d, h, w]
         }
+        self._anno_img_edit_change_flag = False
 
     def clear(self):
         self._raw_img = None
         self._anno_img = None
         self._anno_img_edit = None
+        self._anno_img_edit_undo_stack.clear()
+        self._anno_img_edit_redo_stack.clear()
         self._raw_img_filepath = None
         self._anno_img_filepath = None
 
@@ -51,12 +58,13 @@ class Model:
             'target_centers': None,  # [n_targets]. order of target_ids.
             'target_id_map': None  # [d, h, w]
         }
+        self._anno_img_edit_change_flag = False
 
     def read_img(self, filepath, img_type):
         assert img_type in ['raw', 'anno']
         if not os.path.exists(filepath):
             raise FileNotFoundError('%s do not exist' % filepath)
-        self.last_wd = os.path.dirname(filepath)
+        self.last_read_dir = os.path.dirname(filepath)
         if img_type == 'raw':
             self._raw_img = sitk.ReadImage(filepath)
             self._raw_img_filepath = filepath
@@ -76,8 +84,11 @@ class Model:
                 self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img).astype(np.int16)
                 self._anno_img_filepath = filepath
         self.compute_img_stats('anno')
+        self._anno_img_edit_undo_stack.clear()
+        self._anno_img_edit_redo_stack.clear()
 
     def save_anno(self, filename):
+        self.last_save_dir = os.path.dirname(filename)
         anno_img = sitk.GetImageFromArray(self._anno_img_edit)
         anno_img.CopyInformation(self._anno_img)
         self._anno_img = anno_img
@@ -115,6 +126,7 @@ class Model:
                 self._anno_img_stats['target_labels'] = target_labels
                 self._anno_img_stats['target_centers'] = target_centers
                 self._anno_img_stats['target_id_map'] = all_targets_map
+            self._anno_img_edit_change_flag = False
 
     @staticmethod
     def get_target_center(target_binary_map):
@@ -265,7 +277,7 @@ class Model:
                 target_centers.append(all_target_centers[i])
         return target_centers
 
-    def anno_paint(self, x, y, z, axis, label, brush_type, brush_size, erase=False):
+    def anno_paint(self, x, y, z, axis, label, brush_type, brush_size, erase=False, new_step=False):
         if brush_type == BRUSH_TYPE_NO_BRUSH:
             return
         pos = [z, y, x]  # d, h, w
@@ -309,6 +321,11 @@ class Model:
         paint_area_slice = (slice(paint_area_bbox[0][0], paint_area_bbox[0][1] + 1, 1),
                             slice(paint_area_bbox[1][0], paint_area_bbox[1][1] + 1, 1),
                             slice(paint_area_bbox[2][0], paint_area_bbox[2][1] + 1, 1))
+
+        if new_step:
+            self._anno_img_edit_undo_stack.append(self._anno_img_edit.copy())
+            self._anno_img_edit_redo_stack.clear()
+
         if not erase:
             self._anno_img_edit[paint_area_slice] = np.where(new_paint_area_anno_img > 0,
                                                              new_paint_area_anno_img,
@@ -318,8 +335,29 @@ class Model:
                 np.logical_and(self._anno_img_edit[paint_area_slice] == label, new_paint_area_anno_img > 0),
                 np.zeros(new_paint_area_anno_img.shape, self._anno_img_edit.dtype),
                 self._anno_img_edit[paint_area_slice])
+        self._anno_img_edit_change_flag = True
 
     def delete_target(self, target_id):
+        if self._anno_img_edit_change_flag:
+            raise ChangeNotSavedError('You must press the "Refresh" button for the target list before target deletion!')
+        self._anno_img_edit_undo_stack.append(self._anno_img_edit.copy())
+        self._anno_img_edit_redo_stack.clear()
         self._anno_img_edit = np.where(self._anno_img_stats['target_id_map'] == target_id,
                                        np.zeros(self._anno_img_edit.shape, self._anno_img_edit.dtype),
                                        self._anno_img_edit)
+
+    def undo_paint(self):
+        if len(self._anno_img_edit_undo_stack) > 0:
+            self._anno_img_edit_redo_stack.append(self._anno_img_edit)
+            self._anno_img_edit = self._anno_img_edit_undo_stack.pop()
+            self._anno_img_edit_change_flag = True
+            return True
+        return False
+
+    def redo_paint(self):
+        if len(self._anno_img_edit_redo_stack) > 0:
+            self._anno_img_edit_undo_stack.append(self._anno_img_edit)
+            self._anno_img_edit = self._anno_img_edit_redo_stack.pop()
+            self._anno_img_edit_change_flag = True
+            return True
+        return False

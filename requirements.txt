@@ -1,0 +1,4 @@
+connected_components_3d==1.13.0
+numpy==1.19.1
+PyQt5==5.15.1
+SimpleITK==2.0.1

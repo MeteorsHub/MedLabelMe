@@ -1,0 +1,1 @@
+pyinstaller -y -w --clean -n MedicalLabelMe src/app.py
