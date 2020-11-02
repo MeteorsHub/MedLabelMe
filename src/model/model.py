@@ -16,8 +16,8 @@ class Model:
         self._raw_img = None
         self._anno_img = None
         self._anno_img_edit = None  # d, h, w
-        self._anno_img_edit_undo_stack = deque(maxlen=10)
-        self._anno_img_edit_redo_stack = deque(maxlen=10)
+        self._anno_img_edit_undo_stack = deque(maxlen=5)
+        self._anno_img_edit_redo_stack = deque(maxlen=5)
         self._raw_img_filepath = None
         self._anno_img_filepath = None
         self.last_read_dir = os.getcwd()
