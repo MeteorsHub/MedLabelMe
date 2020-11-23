@@ -7,7 +7,10 @@ from controller.main_window_controller import MainWindow
 
 
 def main(argv):
-    sys.excepthook = error_handler
+    if len(argv) == 2 and argv[1] == '-v':
+        pass
+    else:
+        sys.excepthook = error_handler
 
     app = QApplication(argv)
     main_window = MainWindow()

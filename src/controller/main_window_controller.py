@@ -186,8 +186,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i in range(3):
             if new_focus_point[i] < 0:
                 new_focus_point[i] = 0
-            if new_focus_point[i] > self.model.get_size()[i]:
-                new_focus_point[i] = self.model.get_size()[i]
+            if new_focus_point[i] >= self.model.get_size()[i]:
+                new_focus_point[i] = self.model.get_size()[i] - 1
 
         if new_focus_point[2] != self._focus_point[2]:
             scenes += 'a'
@@ -480,15 +480,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_delete_target_button_clicked(self):
         selected_target = self.targetList.currentItem()
+        row = self.targetList.currentRow()
         if selected_target is None:
             return
         target_id = selected_target.target_id
         try:
             self.model.delete_target(target_id)
             self.update_scenes('asc', raw=False)
-            self.update_anno_targets_list()
+            self.targetList.takeItem(row)
         except ChangeNotSavedError as e:
             QMessageBox.warning(self, 'Refresh before Delete!', e.__str__())
+        pass
 
     @pyqtSlot()
     def menu_undo_paint_triggered(self):

@@ -71,7 +71,7 @@ class Model:
             self.compute_img_stats('raw')
             self._anno_img = sitk.Image(self.get_size(), sitk.sitkInt16)
             self._anno_img.CopyInformation(self._raw_img)
-            self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img)
+            self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img).astype(np.int8)
             self._anno_img_filepath = '[newly created]'
         elif img_type == 'anno':
             anno_img = sitk.ReadImage(filepath)
@@ -81,7 +81,7 @@ class Model:
                 raise IllegalSizeError(anno_img.GetSize(), self._raw_img.GetSize())
             else:
                 self._anno_img = anno_img
-                self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img).astype(np.int16)
+                self._anno_img_edit = sitk.GetArrayFromImage(self._anno_img).astype(np.int8)
                 self._anno_img_filepath = filepath
         self.compute_img_stats('anno')
         self._anno_img_edit_undo_stack.clear()
@@ -89,7 +89,7 @@ class Model:
 
     def save_anno(self, filename):
         self.last_save_dir = os.path.dirname(filename)
-        anno_img = sitk.GetImageFromArray(self._anno_img_edit)
+        anno_img = sitk.GetImageFromArray(self._anno_img_edit.astype(np.int16))
         anno_img.CopyInformation(self._anno_img)
         self._anno_img = anno_img
         sitk.WriteImage(self._anno_img, filename)
